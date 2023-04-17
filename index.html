@@ -13,13 +13,13 @@
     <style>
         body {
             font-family: sans-serif;
+            box-sizing: border-box;
         }
 
         .content {
-            max-width: 1000px;
+            max-width: 1500px;
             margin: 0 auto;
         }
-
 
         .text {
             padding: 1em;
@@ -35,33 +35,28 @@
         .wrapper-box {
             margin-top: 1.5em;
             padding: 2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
         }
 
         .jxgnew {
             aspect-ratio: 1;
-            max-width: 600px;
+            width: 100%;
             overflow: hidden;
-            flex-grow: 1;
-            flex-basis: 200px;
-            flex-shrink: 1;
         }
 
         .jxgbox.left {
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
             border-right: none;
-            box-sizing: border-box;
         }
 
         .jxgbox.right {
+            aspect-ratio: 2;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
             border-left: none;
-            box-sizing: border-box;
-            margin-left: -2px;
+            grid-column: span 2;
         }
     </style>
 </head>
@@ -111,7 +106,7 @@
         //------------------------------------------------------------------------------------
 
         // second board
-        var board2 = JXG.JSXGraph.initBoard('box2', { boundingbox: [-1, 1.33, 7, -1.33], showNavigation: false, zoom: { enabled: false }, pan: { enabled: false } });
+        var board2 = JXG.JSXGraph.initBoard('box2', { boundingbox: [-1, 1.33, 7, -1.33], showNavigation: false, keepAspectRatio: true, zoom: { enabled: false }, pan: { enabled: false } });
 
         // axes
         var xax2 = board2.create('axis', [[0, 0], [1, 0]], {
@@ -133,7 +128,7 @@
         board2.create("segment", [[0, 0], function () { return [arc.Value(), 0] }], { color: "purple" })
 
         // asymptotes for tangent
-        var checkbox = board2.create("checkbox", [1, -2, "Asymptoten Tangens"])
+        var checkbox = board2.create("checkbox", [1, -1.5, "show asymptotes"], { fixed: true })
         for (let i = Math.PI / 2; i <= 2 * Math.PI; i += Math.PI) {
             board2.create("line", [[i, 0], [i, 1]], { dash: 3, color: "orange", strokeWidth: 1, visible: () => checkbox.Value(), highlight: false, fixed: true })
         }
