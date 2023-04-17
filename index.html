@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Trigonometric functions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" charset="UTF-8"
+        src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css" />
+    <!-- The next line is optional: MathJax -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+
+        .text {
+            padding: 1em;
+        }
+
+        .text,
+        .wrapper-box {
+            border-radius: 6px;
+            background-color: whitesmoke;
+            box-shadow: 0 02px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .wrapper-box {
+            margin-top: 1.5em;
+            padding: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .jxgnew {
+            aspect-ratio: 1;
+            max-width: 600px;
+            overflow: hidden;
+            flex-grow: 1;
+            flex-basis: 200px;
+            flex-shrink: 1;
+        }
+
+        .jxgbox.left {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: none;
+            box-sizing: border-box;
+        }
+
+        .jxgbox.right {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: none;
+            box-sizing: border-box;
+            margin-left: -2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content">
+
+        <h1>Trigonometric functions visualized</h1>
+        <div class="text">
+            In this applet one can drag the point A along the unit circle to see the sine, cosine and tangent depicted
+            as
+            distance on the right side and as functiongraph on the left side.
+        </div>
+        <div class="wrapper-box">
+            <div id="box" class="jxgbox jxgnew left"></div>
+            <div id="box2" class="jxgbox jxgnew right"></div>
+        </div>
+
+    </div>
+
+    <!-- JSXGraph script -->
+    <script>
+
+        //------------------------------------------------------------------------------------
+
+        // first board
+        var board = JXG.JSXGraph.initBoard('box', { boundingbox: [-1.33, 1.33, 1.33, -1.33], axis: true, showNavigation: false, zoom: { enabled: false }, pan: { enabled: false } });
+
+        // create elements
+        var b1c1 = board.create('circle', [[0, 0], [1, 0]], { fixed: true, strokeColor: "black", dash: 2, highlight: false });
+        var b1p1 = board.create('point', [2, 0], { slideObject: b1c1, showInfobox: false, snapToGrid: true, snapSizeX: 0.01, snapSizeY: 0.01 });
+        var perp = board.create('perpendicular', [board.defaultAxes.x, b1p1], { strokeColor: 'grey', visible: false });
+        var perp2 = board.create('perpendicular', [board.defaultAxes.y, b1p1], { strokeColor: 'grey', visible: false });
+        var h1 = board.create("line", [[0, 0], b1p1], { strokeColor: "grey", highlight: false, fixed: true })
+        var helper = board.create("line", [[1, 0], [1, 1]], { color: "grey", highlight: false, fixed: true });
+        var arc = board.create('arc', [[0, 0], [1, 0], b1p1], { strokeWidth: 3, strokeColor: 'purple' });
+        Object.entries(arc.childElements).forEach((el) => el[1].setAttribute({ visible: false })) // dont show points
+        var i1 = board.create('intersection', [helper, h1, 0], { size: 0, withLabel: false, highlight: false, showInfobox: false });
+        var i2 = board.create('intersection', [board.defaultAxes.x, perp, 0], { size: 0, withLabel: false, highlight: false, showInfobox: false });
+        var tan = board.create("segment", [[1, 0], i1], { color: "orange", strokeWidth: 3, withLabel: true, name: "tangent", label: { color: "orange" }, highlight: false })
+        var sin = board.create("segment", [b1p1, i2], { color: "blue", strokeWidth: 3, withLabel: true, name: "sine", label: { color: "blue" }, highlight: false })
+        var cos = board.create("segment", [[0, 0], i2], { color: "green", strokeWidth: 3, withLabel: true, name: "cosine", label: { color: "green" }, highlight: false })
+        var alpha = board.create('angle', [board.defaultAxes.x, h1, 1, 1], { dot: { visible: true }, radius: .4 });
+        var t1 = board.create('text', [-1.2, -0.9, function () { return "angle (deg): " + JXG.toFixed(alpha.Value() / Math.PI * 180, 2) + "&deg;<br>" + "angle (rad): " + JXG.toFixed(alpha.Value(), 2) }], { fontSize: "14", anchorY: top, fixed: true, frozen: true, highlight: false, cssStyle: "backgroundColor: #F5F5F5; width: 150px; padding: .5em;", visible: () => board.containerObj.offsetWidth < 350 ? false : true });
+
+        //------------------------------------------------------------------------------------
+
+        // second board
+        var board2 = JXG.JSXGraph.initBoard('box2', { boundingbox: [-1, 1.33, 7, -1.33], showNavigation: false, zoom: { enabled: false }, pan: { enabled: false } });
+
+        // axes
+        var xax2 = board2.create('axis', [[0, 0], [1, 0]], {
+            ticks: {
+                scale: Math.PI,
+                scaleSymbol: '\u03c0',
+                ticksDistance: 1,
+                insertTicks: false,
+                minorTicks: false
+            }
+        });
+        var yax2 = board2.create('axis', [[0, 0], [0, 1]], { ticks: { minorTicks: false, drawLabels: false } });
+
+        // special ticks
+        board2.create('ticks', [xax2, [Math.PI, 2 * Math.PI]], { strokeColor: 'black', strokeWidth: 1 });
+        board2.create('ticks', [yax2, [-1, -0.5, 0.5, 1]], { strokeColor: 'black', strokeWidth: 1, drawLabels: true, labels: ["-1", "<math><mo>-</mo><mfrac><mi>1</mi><mi>2</mi></mfrac></math>", "<math><mfrac><mi>1</mi><mi>2</mi></mfrac></math>", "1"] });
+
+        // arc length
+        board2.create("segment", [[0, 0], function () { return [arc.Value(), 0] }], { color: "purple" })
+
+        // asymptotes for tangent
+        var checkbox = board2.create("checkbox", [1, -2, "Asymptoten Tangens"])
+        for (let i = Math.PI / 2; i <= 2 * Math.PI; i += Math.PI) {
+            board2.create("line", [[i, 0], [i, 1]], { dash: 3, color: "orange", strokeWidth: 1, visible: () => checkbox.Value(), highlight: false, fixed: true })
+        }
+
+        // sine point with trace
+        var b2p1 = board2.create('point', [
+            function () { return JXG.Math.Geometry.rad([1, 0], [0, 0], b1p1); },
+            function () { return b1p1.Y() }],
+            { fixed: true, trace: true, color: 'blue', name: 'S', size: 0.1, withLabel: false });
+        // cosine point with trace
+        var b2p2 = board2.create('point', [
+            function () { return JXG.Math.Geometry.rad([1, 0], [0, 0], b1p1); },
+            function () { return b1p1.X() }],
+            { fixed: true, trace: true, color: 'green', name: 'C', size: 0.1, withLabel: false });
+        // tangent point with trace
+        var b2p3 = board2.create('point', [
+            function () { return JXG.Math.Geometry.rad([1, 0], [0, 0], b1p1); },
+            function () { return i1.Y() }],
+            { fixed: true, trace: () => Math.abs(b1p1.X(), 0) <= 0.1 ? false : true, color: 'orange', name: 'T', size: 0.1, withLabel: false, visible: () => Math.abs(b1p1.X(), 0) <= 0.1 ? false : true });
+
+        // connect the boards
+        board.addChild(board2);
+
+    //------------------------------------------------------------------------------------
+
+    </script>
+</body>
+
+</html>
