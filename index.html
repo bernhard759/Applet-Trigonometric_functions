@@ -84,7 +84,7 @@
         //------------------------------------------------------------------------------------
 
         // first board
-        var board = JXG.JSXGraph.initBoard('box', { boundingbox: [-1.33, 1.33, 1.33, -1.33], axis: true, showNavigation: false, zoom: { enabled: false }, pan: { enabled: false } });
+        var board = JXG.JSXGraph.initBoard('box', { boundingbox: [-1.3, 1.3, 1.3, -1.3], axis: true, showNavigation: false, zoom: { enabled: false }, pan: { enabled: false } });
 
         // create elements
         var b1c1 = board.create('circle', [[0, 0], [1, 0]], { fixed: true, strokeColor: "black", dash: 2, highlight: false });
@@ -106,7 +106,7 @@
         //------------------------------------------------------------------------------------
 
         // second board
-        var board2 = JXG.JSXGraph.initBoard('box2', { boundingbox: [-1, 1.33, 7, -1.33], showNavigation: false, keepAspectRatio: true, zoom: { enabled: false }, pan: { enabled: false } });
+        var board2 = JXG.JSXGraph.initBoard('box2', { boundingbox: [-0.1, 1.3, 4.8, -1.3], showNavigation: false, keepAspectRatio: true, zoom: { enabled: false }, pan: { enabled: false } });
 
         // axes
         var xax2 = board2.create('axis', [[0, 0], [1, 0]], {
@@ -128,7 +128,7 @@
         board2.create("segment", [[0, 0], function () { return [arc.Value(), 0] }], { color: "purple" })
 
         // asymptotes for tangent
-        var checkbox = board2.create("checkbox", [1, -1.5, "show asymptotes"], { fixed: true })
+        var checkbox = board2.create("checkbox", [0.8, -1.15, "show asymptotes"], { fixed: true })
         for (let i = Math.PI / 2; i <= 2 * Math.PI; i += Math.PI) {
             board2.create("line", [[i, 0], [i, 1]], { dash: 3, color: "orange", strokeWidth: 1, visible: () => checkbox.Value(), highlight: false, fixed: true })
         }
